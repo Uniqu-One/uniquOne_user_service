@@ -1,4 +1,4 @@
-package com.sparos.uniquone.msauserservice.util.basetime;
+package com.sparos.uniquone.msauserservice.util.AuditingFields;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

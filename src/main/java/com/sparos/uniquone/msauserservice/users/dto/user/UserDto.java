@@ -1,4 +1,4 @@
-package com.sparos.uniquone.msauserservice.users.dto;
+package com.sparos.uniquone.msauserservice.users.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserCreateDto {
+public class UserDto {
+
     private String email;
+    private String nickname;
+
 }
