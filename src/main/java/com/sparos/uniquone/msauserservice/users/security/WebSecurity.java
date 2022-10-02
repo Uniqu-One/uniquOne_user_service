@@ -1,4 +1,4 @@
-package com.sparos.uniquone.msauserservice.util.security;
+package com.sparos.uniquone.msauserservice.users.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
