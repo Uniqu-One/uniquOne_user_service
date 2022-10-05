@@ -1,7 +1,6 @@
 package com.sparos.uniquone.msauserservice.users.controller;
 
 import com.sparos.uniquone.msauserservice.users.dto.signup.ExistEmailResponseDto;
-import com.sparos.uniquone.msauserservice.users.dto.signup.ExistNicknameResponseDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserCreateDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserDto;
 import com.sparos.uniquone.msauserservice.users.service.UserService;

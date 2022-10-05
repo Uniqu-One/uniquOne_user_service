@@ -67,6 +67,9 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
 
+	//oauth2 관련 라이브러리.
+	implementation 'org.springframework.security:spring-security-oauth2-client'
+
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
