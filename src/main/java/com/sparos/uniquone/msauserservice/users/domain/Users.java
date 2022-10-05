@@ -1,4 +1,4 @@
-package com.sparos.uniquone.msauserservice.users.entity;
+package com.sparos.uniquone.msauserservice.users.domain;
 
 
 import com.sparos.uniquone.msauserservice.users.typeEnum.UserGrade;
@@ -21,10 +21,10 @@ public class Users extends BaseTimeEntity {
     private Long id;
     @Column(nullable = false , length = 45 , unique = true)
     private String email;
-    @Column(nullable = false, length = 100)
+    @Column(nullable = true, length = 100)
     private String pwd;
     @Setter
-    @Column(nullable = false, length = 20, unique = true)
+    @Column(nullable = false, length = 100, unique = true)
     private String nickname;
     @Setter
     @Column(nullable = true, length = 13)

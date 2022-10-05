@@ -1,6 +1,6 @@
 package com.sparos.uniquone.msauserservice.notiKeyword.entity;
 
-import com.sparos.uniquone.msauserservice.users.entity.Users;
+import com.sparos.uniquone.msauserservice.users.domain.Users;
 import lombok.Getter;
 
 import javax.persistence.*;
