@@ -17,7 +17,7 @@ public class AuthController {
 
     private final UserService userService;
 
-    @GetMapping("/{nickname}/nexist")
+    @GetMapping("/{nickname}/exist")
     public ResponseEntity<ExistNicknameResponseDto> existsByNickname(@PathVariable("nickname") String nickname){
         ExistNicknameResponseDto existNicknameResponseDto = new ExistNicknameResponseDto();
         existNicknameResponseDto.setExistNickName(userService.existByNickname(nickname));

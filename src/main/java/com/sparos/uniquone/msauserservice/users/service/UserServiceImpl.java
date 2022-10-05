@@ -2,12 +2,11 @@ package com.sparos.uniquone.msauserservice.users.service;
 
 import com.sparos.uniquone.msauserservice.users.dto.user.UserCreateDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserDto;
-import com.sparos.uniquone.msauserservice.users.entity.Users;
+import com.sparos.uniquone.msauserservice.users.domain.Users;
 import com.sparos.uniquone.msauserservice.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
