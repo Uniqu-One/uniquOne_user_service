@@ -15,9 +15,9 @@ public class GenerateRandomNick {
 
     private final UserRepository userRepository;
 
-    private List<String> firstWords = Arrays.asList("예쁜", "화난", "귀여운", "배고픈", "철학적인", "현학적인", "슬픈", "푸른", "비싼", "밝은", "심드렁한", "바보같은", "멍청한"
+    private static List<String> firstWords = Arrays.asList("예쁜", "화난", "귀여운", "배고픈", "철학적인", "현학적인", "슬픈", "푸른", "비싼", "밝은", "심드렁한", "바보같은", "멍청한"
                                                     ,"똑똑한","배긁는","안경쓴");
-    private List<String> secondWords = Arrays.asList("유니콘", "청룡","백호","주작","현무","구미호","인면조","봉황","불가사리","이무기","왁왁","구울"
+    private static List<String> secondWords = Arrays.asList("유니콘", "청룡","백호","주작","현무","구미호","인면조","봉황","불가사리","이무기","왁왁","구울"
             ,"고블린","악마","엘프","흡혈귀","좀비");
 
     private String shuffle(){

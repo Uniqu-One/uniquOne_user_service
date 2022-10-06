@@ -4,14 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparos.uniquone.msauserservice.users.repository.UserRepository;
 import com.sparos.uniquone.msauserservice.users.security.jwt.JwtAuthFilter;
 import com.sparos.uniquone.msauserservice.users.security.jwt.JwtProvider;
-import com.sparos.uniquone.msauserservice.users.security.jwt.JwtToken;
 import com.sparos.uniquone.msauserservice.users.security.oauth2.CustomOauth2UserService;
 import com.sparos.uniquone.msauserservice.users.security.oauth2.OAuth2SuccessHandler;
-import com.sparos.uniquone.msauserservice.users.service.UserService;
+import com.sparos.uniquone.msauserservice.users.service.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -47,6 +44,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().anyRequest().permitAll()
                         .and()
                                 .addFilter(getAuthenticationFilter());
+
 //        http.oauth2Login().loginPage("/token/expired")
         http.oauth2Login()
                 .successHandler(successHandler)
@@ -65,4 +63,6 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
         return authenticationFilter;
     }
+
+
 }

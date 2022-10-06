@@ -1,13 +1,11 @@
 package com.sparos.uniquone.msauserservice.users.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparos.uniquone.msauserservice.users.domain.Users;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserJwtDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserLoginDto;
 import com.sparos.uniquone.msauserservice.users.security.jwt.JwtProvider;
 import com.sparos.uniquone.msauserservice.users.security.jwt.JwtToken;
-import com.sparos.uniquone.msauserservice.users.service.UserService;
-import lombok.RequiredArgsConstructor;
+import com.sparos.uniquone.msauserservice.users.service.user.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 
 //@RequiredArgsConstructor
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -89,6 +86,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         response.addHeader("token", jwtToken.getToken());
         response.addHeader("refresh", jwtToken.getRefreshToken());
+        response.addHeader("Access-Control-Expose-Headers","token, refresh");
 
         response.setContentType("application/json;charset=UTF-8");
 

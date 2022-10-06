@@ -1,21 +1,26 @@
 package com.sparos.uniquone.msauserservice.users.controller;
 
+import com.sparos.uniquone.msauserservice.users.dto.auth.AuthEmailDto;
+import com.sparos.uniquone.msauserservice.users.dto.auth.AuthOtpCodeDto;
 import com.sparos.uniquone.msauserservice.users.dto.signup.ExistNicknameResponseDto;
-import com.sparos.uniquone.msauserservice.users.service.UserService;
+import com.sparos.uniquone.msauserservice.users.service.auth.AuthService;
+import com.sparos.uniquone.msauserservice.users.service.user.UserService;
+import com.sparos.uniquone.msauserservice.util.otp.service.MailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-
     private final UserService userService;
+
+    private final AuthService authService;
 
     @GetMapping("/{nickname}/exist")
     public ResponseEntity<ExistNicknameResponseDto> existsByNickname(@PathVariable("nickname") String nickname){
@@ -23,5 +28,25 @@ public class AuthController {
         existNicknameResponseDto.setExistNickName(userService.existByNickname(nickname));
         return ResponseEntity.status(HttpStatus.OK).body(existNicknameResponseDto);
     }
+
+    @PostMapping("/ePush")
+    public void sendOtpCodeToEmail(@RequestBody @Validated AuthEmailDto authEmailDto, HttpServletResponse response){
+
+        authService.sendOtpCodeToEmail(authEmailDto.getEmail());
+
+        response.setStatus(HttpServletResponse.SC_OK);
+    }
+
+    @PostMapping("/check")
+    public void optCodeCheck(@RequestBody @Validated AuthOtpCodeDto authOtpCodeDto, HttpServletResponse response){
+
+        boolean isCollect = authService.checkOtpCode(authOtpCodeDto.getEmail(), authOtpCodeDto.getCode());
+        if(isCollect){
+            response.setStatus(HttpServletResponse.SC_OK);
+        }else {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
+    }
+
 
 }

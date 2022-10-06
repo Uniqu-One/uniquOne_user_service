@@ -1,14 +1,13 @@
 package com.sparos.uniquone.msauserservice.users.security;
 
 import com.sparos.uniquone.msauserservice.users.security.users.CustomUserDetails;
-import com.sparos.uniquone.msauserservice.users.service.UserService;
+import com.sparos.uniquone.msauserservice.users.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

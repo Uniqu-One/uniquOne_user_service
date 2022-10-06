@@ -3,7 +3,7 @@ package com.sparos.uniquone.msauserservice.users.security.jwt.controller;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserJwtDto;
 import com.sparos.uniquone.msauserservice.users.security.jwt.JwtProvider;
 import com.sparos.uniquone.msauserservice.users.security.jwt.JwtToken;
-import com.sparos.uniquone.msauserservice.users.service.UserService;
+import com.sparos.uniquone.msauserservice.users.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

@@ -1,21 +1,24 @@
-package com.sparos.uniquone.msauserservice.users.service;
+package com.sparos.uniquone.msauserservice.users.service.user;
 
 import com.sparos.uniquone.msauserservice.users.dto.signup.RandomNickDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserCreateDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserDto;
 import com.sparos.uniquone.msauserservice.users.domain.Users;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserJwtDto;
+import com.sparos.uniquone.msauserservice.users.dto.user.UserPwDto;
 import com.sparos.uniquone.msauserservice.users.repository.UserRepository;
+import com.sparos.uniquone.msauserservice.users.security.jwt.JwtProvider;
 import com.sparos.uniquone.msauserservice.users.security.users.CustomUserDetails;
 import com.sparos.uniquone.msauserservice.util.generate.GenerateRandomNick;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.math.raw.Mod;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -23,6 +26,8 @@ import java.util.function.Supplier;
 @Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
+    private final JwtProvider jwtProvider;
 
     private final UserRepository userRepository;
 
@@ -53,6 +58,50 @@ public class UserServiceImpl implements UserService {
 
         Users saveUser = userRepository.save(user);
         return new ModelMapper().map(saveUser, UserDto.class);
+    }
+
+    @Override
+    public UserDto findByEmail(String email) {
+        Optional<Users> users = userRepository.findByEmail(email);
+//        jwtProvider.getEmailId()
+        return new ModelMapper().map(users, UserDto.class);
+    }
+
+    @Override
+    public UserDto findUserByToken(HttpServletRequest request) {
+        String email = jwtProvider.getEmailId(request);
+
+        Users user = userRepository.findByEmail(email).get();
+
+        return new ModelMapper().map(user, UserDto.class);
+    }
+
+    @Override
+    public UserDto updateUserNicNameByToken(String nickName, HttpServletRequest request) {
+        String email = jwtProvider.getEmailId(request);
+
+        Users user = userRepository.findByEmail(email).get();
+
+        user.setNickname(nickName);
+
+        Users saveUser = userRepository.save(user);
+
+        return new ModelMapper().map(saveUser,UserDto.class);
+    }
+
+    @Override
+    public boolean updateUserPwByToken(UserPwDto userPwDto, HttpServletRequest request) {
+        String email = jwtProvider.getEmailId(request);
+
+        Users user = userRepository.findByEmail(email).get();
+
+        //기존 비밀 번호 비교 맞으면 변경
+        if(passwordEncoder.matches(userPwDto.getOldpassword(),user.getPwd())){
+            user.setPwd(passwordEncoder.encode(userPwDto.getNewpassword()));
+            return true;
+        }
+        // 틀리면 false
+        return false;
     }
 
     //나중에 프론트에 권한 보여줘도 상관 없으면 그냥 통일.

@@ -1,8 +1,11 @@
 package com.sparos.uniquone.msauserservice.util.generate;
 
+import org.springframework.stereotype.Component;
+
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+@Component
 public class GenerateSmsOtpCode {
     private GenerateSmsOtpCode(){}
 

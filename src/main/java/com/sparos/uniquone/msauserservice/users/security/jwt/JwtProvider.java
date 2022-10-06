@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 //@Component
@@ -79,6 +80,12 @@ public class JwtProvider {
     }
 
     public String getEmailId(String token){
+        return Jwts.parser().setSigningKey(env.getProperty("token.secret")).parseClaimsJws(token).getBody().getSubject();
+    }
+    public String getEmailId(HttpServletRequest request){
+
+        String token = request.getHeader(env.getProperty("token.name"));
+
         return Jwts.parser().setSigningKey(env.getProperty("token.secret")).parseClaimsJws(token).getBody().getSubject();
     }
 

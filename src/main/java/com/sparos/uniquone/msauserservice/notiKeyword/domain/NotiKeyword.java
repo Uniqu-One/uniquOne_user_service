@@ -1,4 +1,4 @@
-package com.sparos.uniquone.msauserservice.notiKeyword.entity;
+package com.sparos.uniquone.msauserservice.notiKeyword.domain;
 
 import com.sparos.uniquone.msauserservice.users.domain.Users;
 import lombok.Getter;
