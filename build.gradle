@@ -70,6 +70,9 @@ dependencies {
 	//oauth2 관련 라이브러리.
 	implementation 'org.springframework.security:spring-security-oauth2-client'
 
+	//mail 서비스 google
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 

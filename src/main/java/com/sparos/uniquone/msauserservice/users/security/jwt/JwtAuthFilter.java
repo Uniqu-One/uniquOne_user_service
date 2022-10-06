@@ -2,18 +2,14 @@ package com.sparos.uniquone.msauserservice.users.security.jwt;
 
 import com.sparos.uniquone.msauserservice.users.domain.Users;
 import com.sparos.uniquone.msauserservice.users.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -42,11 +38,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String token = ((HttpServletRequest)request).getHeader("token");
 
         if(token != null && jwtProvider.verifyToken(token)){
-            String email = jwtProvider.getPkId(token);
+            String email = jwtProvider.getEmailId(token);
 
             Optional<Users> users = userRepository.findByEmail(email);
 
             Authentication auth = getAuthentication(users.get());
+
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
 

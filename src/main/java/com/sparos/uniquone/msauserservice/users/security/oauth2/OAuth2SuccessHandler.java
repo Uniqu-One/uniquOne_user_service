@@ -6,6 +6,8 @@ import com.sparos.uniquone.msauserservice.users.dto.user.UserDto;
 import com.sparos.uniquone.msauserservice.users.repository.UserRepository;
 import com.sparos.uniquone.msauserservice.users.security.jwt.JwtProvider;
 import com.sparos.uniquone.msauserservice.users.security.jwt.JwtToken;
+import com.sparos.uniquone.msauserservice.users.typeEnum.UserRole;
+import com.sparos.uniquone.msauserservice.util.generate.GenerateRandomNick;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -18,8 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Optional;
-import java.util.UUID;
 
 @Slf4j
 @Component
@@ -31,14 +31,17 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     private final ObjectMapper objectMapper;
 
+    private final GenerateRandomNick generateRandomNick;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+
         UserDto userDto = oauthToDto(oAuth2User);
         //회원 가입 처리.
         Users users = saveOrUpdate(userDto);
 
-        JwtToken jwtToken = jwtProvider.generateToken(authentication, users.getEmail());
+        JwtToken jwtToken = jwtProvider.generateToken(users.getEmail(), users.getRole().value());
 
         writeTokenResponse(response,jwtToken);
     }
@@ -47,7 +50,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         response.setContentType("text/html;charset=UTF-8");
 
         response.addHeader("token", jwtToken.getToken());
-        response.addHeader("reflash", jwtToken.getRefreshToken());
+        response.addHeader("refresh", jwtToken.getRefreshToken());
         response.setContentType("application/json;charset=UTF-8");
 
         PrintWriter writer = response.getWriter();
@@ -61,6 +64,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                 .orElse(Users.builder()
                         .email(userDto.getEmail())
                         .nickname(userDto.getNickname())
+                        .role(UserRole.ROLES_USER)
                         .build()
                 );
         return usersRepository.save(users);
@@ -68,9 +72,10 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     private UserDto oauthToDto(OAuth2User oAuth2User){
         var attributes = oAuth2User.getAttributes();
+
         return UserDto.builder()
                 .email((String)attributes.get("email"))
-                .nickname(UUID.randomUUID().toString())
+                .nickname(generateRandomNick.generate())
                 .build();
     }
 }

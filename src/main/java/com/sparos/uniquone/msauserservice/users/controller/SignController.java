@@ -1,6 +1,7 @@
 package com.sparos.uniquone.msauserservice.users.controller;
 
 import com.sparos.uniquone.msauserservice.users.dto.signup.ExistEmailResponseDto;
+import com.sparos.uniquone.msauserservice.users.dto.signup.RandomNickDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserCreateDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserDto;
 import com.sparos.uniquone.msauserservice.users.service.UserService;
@@ -28,5 +29,11 @@ public class SignController {
         ExistEmailResponseDto existEmailResponseDto = new ExistEmailResponseDto();
         existEmailResponseDto.setExistEmail(userService.existByEmail(email));
         return ResponseEntity.status(HttpStatus.OK).body(existEmailResponseDto);
+    }
+
+    @GetMapping("/randNick")
+    public ResponseEntity<RandomNickDto> generateNickName(){
+        RandomNickDto randomNickDto = userService.generateNickName();
+        return ResponseEntity.status(HttpStatus.OK).body(randomNickDto);
     }
 }

@@ -7,8 +7,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -21,11 +19,11 @@ public class JwtProvider {
     private final Environment env;
 
 
-    public JwtToken generateToken(Authentication authentication,String email){
+    public JwtToken generateToken(String email,String role){
         //닉네임을 여기서 꺼내쓸일이 있을까.
-        Claims claims = Jwts.claims().setSubject(String.valueOf(authentication.getPrincipal()));
+        Claims claims = Jwts.claims().setSubject(email);
         claims.put("id", email);
-        claims.put("Role", authentication.getAuthorities());
+        claims.put("Role", role);
 
         return new JwtToken(
                 Jwts.builder()
@@ -43,6 +41,28 @@ public class JwtProvider {
 
         );
     }
+//    public JwtToken generateToken(String email,String role){
+//        //닉네임을 여기서 꺼내쓸일이 있을까.
+//        Claims claims = Jwts.claims().setSubject(String.valueOf(authentication.getPrincipal()));
+//        claims.put("id", email);
+//        claims.put("Role", authentication.getAuthorities());
+//
+//        return new JwtToken(
+//                Jwts.builder()
+//                        .setClaims(claims)
+//                        .setIssuedAt(new Date())
+//                        .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.expiration_time"))))
+//                        .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))
+//                        .compact(),
+//                Jwts.builder()
+//                        .setClaims(claims)
+//                        .setIssuedAt(new Date())
+//                        .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("refreshToken.expiration_time"))))
+//                        .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))
+//                        .compact()
+//
+//        );
+//    }
 
     //토큰 검증 ?
     public boolean verifyToken(String token){
@@ -58,7 +78,7 @@ public class JwtProvider {
         }
     }
 
-    public String getPkId(String token){
+    public String getEmailId(String token){
         return Jwts.parser().setSigningKey(env.getProperty("token.secret")).parseClaimsJws(token).getBody().getSubject();
     }
 
