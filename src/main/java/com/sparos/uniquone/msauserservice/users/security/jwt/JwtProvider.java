@@ -25,7 +25,7 @@ public class JwtProvider {
         Claims claims = Jwts.claims().setSubject(email);
         claims.put("id", id);
         claims.put("email", email);
-        claims.put("Role", role);
+        claims.put("role", role);
 
         return new JwtToken(
                 Jwts.builder()
@@ -58,6 +58,14 @@ public class JwtProvider {
         }
     }
 
+    public Long getUserPkId(String token){
+        return (Long) Jwts.parser().setSigningKey(env.getProperty("token.secret")).parseClaimsJws(token).getBody().get("id");
+    }
+    public Long getUserPkId(HttpServletRequest request){
+        String token = request.getHeader(env.getProperty("token.name"));
+        return (Long) Jwts.parser().setSigningKey(env.getProperty("token.secret")).parseClaimsJws(token).getBody().get("id");
+    }
+
     public String getEmailId(String token) {
         return Jwts.parser().setSigningKey(env.getProperty("token.secret")).parseClaimsJws(token).getBody().getSubject();
     }
@@ -65,6 +73,10 @@ public class JwtProvider {
     public String getEmailId(HttpServletRequest request) {
 
         String token = request.getHeader(env.getProperty("token.name"));
+//
+//        Object id = Jwts.parser().setSigningKey(env.getProperty("token.secret")).parseClaimsJws(token).getBody().get("id");
+//
+//        log.info ("id :  {} ", id);
 
         return Jwts.parser().setSigningKey(env.getProperty("token.secret")).parseClaimsJws(token).getBody().getSubject();
     }
