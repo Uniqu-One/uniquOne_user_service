@@ -41,7 +41,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         //회원 가입 처리.
         Users users = saveOrUpdate(userDto);
 
-        JwtToken jwtToken = jwtProvider.generateToken(users.getEmail(), users.getRole().value());
+//        log.info("user Id : {}", users.getId());
+
+        JwtToken jwtToken = jwtProvider.generateToken(users.getId(),users.getEmail(), users.getRole().value());
 
         writeTokenResponse(response,jwtToken);
     }

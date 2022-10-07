@@ -109,10 +109,12 @@ public class UserServiceImpl implements UserService {
     public UserJwtDto findByEmailForJwt(String email) {
         Optional<UserJwtDto> userJwtDto = userRepository.findByEmail(email)
                 .map(users -> UserJwtDto.builder()
+                        .id((users.getId()))
                         .email(users.getEmail())
                         .nickname(users.getNickname())
                         .role(users.getRole().value())
                         .build());
+
         return userJwtDto.get();
     }
 

@@ -20,10 +20,11 @@ public class JwtProvider {
     private final Environment env;
 
 
-    public JwtToken generateToken(String email,String role){
+    public JwtToken generateToken(Long id , String email, String role) {
         //닉네임을 여기서 꺼내쓸일이 있을까.
         Claims claims = Jwts.claims().setSubject(email);
-        claims.put("id", email);
+        claims.put("id", id);
+        claims.put("email", email);
         claims.put("Role", role);
 
         return new JwtToken(
@@ -42,47 +43,26 @@ public class JwtProvider {
 
         );
     }
-//    public JwtToken generateToken(String email,String role){
-//        //닉네임을 여기서 꺼내쓸일이 있을까.
-//        Claims claims = Jwts.claims().setSubject(String.valueOf(authentication.getPrincipal()));
-//        claims.put("id", email);
-//        claims.put("Role", authentication.getAuthorities());
-//
-//        return new JwtToken(
-//                Jwts.builder()
-//                        .setClaims(claims)
-//                        .setIssuedAt(new Date())
-//                        .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.expiration_time"))))
-//                        .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))
-//                        .compact(),
-//                Jwts.builder()
-//                        .setClaims(claims)
-//                        .setIssuedAt(new Date())
-//                        .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("refreshToken.expiration_time"))))
-//                        .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))
-//                        .compact()
-//
-//        );
-//    }
 
     //토큰 검증 ?
-    public boolean verifyToken(String token){
-        try{
+    public boolean verifyToken(String token) {
+        try {
             Jws<Claims> claims = Jwts.parser()
                     .setSigningKey(env.getProperty("token.secret"))
                     .parseClaimsJws(token);
             return claims.getBody()
                     .getExpiration()
                     .after(new Date());
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
 
-    public String getEmailId(String token){
+    public String getEmailId(String token) {
         return Jwts.parser().setSigningKey(env.getProperty("token.secret")).parseClaimsJws(token).getBody().getSubject();
     }
-    public String getEmailId(HttpServletRequest request){
+
+    public String getEmailId(HttpServletRequest request) {
 
         String token = request.getHeader(env.getProperty("token.name"));
 
