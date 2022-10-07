@@ -5,3 +5,4 @@ spring:
       name: ${UNI_CONFIG_USER}
   profiles:
     active: local
+#    test
