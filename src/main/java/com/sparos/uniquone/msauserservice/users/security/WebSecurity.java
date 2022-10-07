@@ -49,6 +49,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.oauth2Login()
                 .successHandler(successHandler)
                 .userInfoEndpoint().userService(oauth2UserService);
+
         http.addFilterBefore(new JwtAuthFilter(jwtProvider,userRepository), UsernamePasswordAuthenticationFilter.class);
     }
 
@@ -59,6 +60,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     private AuthenticationFilter getAuthenticationFilter() throws Exception{
         AuthenticationFilter authenticationFilter = new AuthenticationFilter(authenticationManager(),userService,jwtProvider,objectMapper);
+
         authenticationFilter.setFilterProcessesUrl("/login/oauth");
 
         return authenticationFilter;
