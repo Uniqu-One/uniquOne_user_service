@@ -5,6 +5,7 @@ import com.sparos.uniquone.msauserservice.users.dto.signup.RandomNickDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserCreateDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserDto;
 import com.sparos.uniquone.msauserservice.users.service.user.UserService;
+import com.sparos.uniquone.msauserservice.util.controller.response.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,7 @@ public class SignController {
 
     @PostMapping()
     public ResponseEntity<UserDto> createUser(@RequestBody @Validated UserCreateDto userCreateDto){
-        UserDto userDto = userService.createUser(userCreateDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(userCreateDto));
     }
 
     @GetMapping("/{email}/exist")

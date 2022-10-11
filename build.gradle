@@ -73,6 +73,17 @@ dependencies {
 	//mail 서비스 google
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+
+	//swagger
+//	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+//	implementation 'io.springfox:springfox-swagger2:2.9.2'
+
+//	implementation 'io.springfox:springfox-boot-starter'
+	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
+	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+//	implementation group: 'io.springfox', name: 'springfox-oas', version: '3.0.0'
+
+
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
