@@ -35,7 +35,7 @@ public class JwtController {
             UserJwtDto userDto = userService.findByEmailForJwt(email);
             //ㅇㅖ외 처리.
 //            userService.
-            JwtToken newToken = jwtProvider.generateToken(userDto.getEmail(), userDto.getRole());
+            JwtToken newToken = jwtProvider.generateToken(userDto.getId(),userDto.getEmail(), userDto.getRole());
 
             response.addHeader("token", newToken.getToken());
             response.addHeader("refresh", newToken.getRefreshToken());

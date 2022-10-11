@@ -1,11 +1,13 @@
 package com.sparos.uniquone.msauserservice.users.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparos.uniquone.msauserservice.users.dto.user.UserDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserJwtDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserLoginDto;
 import com.sparos.uniquone.msauserservice.users.security.jwt.JwtProvider;
 import com.sparos.uniquone.msauserservice.users.security.jwt.JwtToken;
 import com.sparos.uniquone.msauserservice.users.service.user.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,6 +22,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 //@RequiredArgsConstructor
+@Slf4j
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final UserService userService;
@@ -69,7 +72,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 //        String email = ((Users) authResult.getPrincipal()).getEmail();
         String email = authResult.getPrincipal().toString();
         UserJwtDto userDto = userService.findByEmailForJwt(email);
-        JwtToken jwtToken = jwtProvider.generateToken(email, userDto.getRole());
+
+//        log.info("userdto.id {}: ", userDto.getId());
+
+        JwtToken jwtToken = jwtProvider.generateToken(userDto.getId() ,email, userDto.getRole());
         response.addHeader("email", email);
         writeTokenResponse(response,jwtToken);
     }
