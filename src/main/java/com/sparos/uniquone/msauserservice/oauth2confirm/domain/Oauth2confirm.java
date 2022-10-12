@@ -1,6 +1,6 @@
 package com.sparos.uniquone.msauserservice.oauth2confirm.domain;
 
-import com.sparos.uniquone.msauserservice.util.AuditingFields.BaseTimeEntity;
+import com.sparos.uniquone.msauserservice.utils.AuditingFields.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.Column;

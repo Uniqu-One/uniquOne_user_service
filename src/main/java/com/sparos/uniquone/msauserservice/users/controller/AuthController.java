@@ -5,7 +5,6 @@ import com.sparos.uniquone.msauserservice.users.dto.auth.AuthOtpCodeDto;
 import com.sparos.uniquone.msauserservice.users.dto.signup.ExistNicknameResponseDto;
 import com.sparos.uniquone.msauserservice.users.service.auth.AuthService;
 import com.sparos.uniquone.msauserservice.users.service.user.UserService;
-import com.sparos.uniquone.msauserservice.util.otp.service.MailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

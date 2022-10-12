@@ -3,7 +3,7 @@ package com.sparos.uniquone.msauserservice.users.domain;
 
 import com.sparos.uniquone.msauserservice.users.typeEnum.UserGrade;
 import com.sparos.uniquone.msauserservice.users.typeEnum.UserRole;
-import com.sparos.uniquone.msauserservice.util.AuditingFields.BaseTimeEntity;
+import com.sparos.uniquone.msauserservice.utils.AuditingFields.BaseTimeEntity;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
