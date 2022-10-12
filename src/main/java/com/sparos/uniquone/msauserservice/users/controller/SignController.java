@@ -5,7 +5,6 @@ import com.sparos.uniquone.msauserservice.users.dto.signup.RandomNickDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserCreateDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserDto;
 import com.sparos.uniquone.msauserservice.users.service.user.UserService;
-import com.sparos.uniquone.msauserservice.util.controller.response.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
