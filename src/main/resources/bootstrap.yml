@@ -4,4 +4,4 @@ spring:
       uri: ${UNI_CONFIG_URI}
       name: ${UNI_CONFIG_USER}
   profiles:
-    active: local
+    active: ${UNI_CONFIG_ACTIVE}
