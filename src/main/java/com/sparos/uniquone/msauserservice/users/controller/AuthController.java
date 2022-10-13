@@ -2,6 +2,7 @@ package com.sparos.uniquone.msauserservice.users.controller;
 
 import com.sparos.uniquone.msauserservice.users.dto.auth.AuthEmailDto;
 import com.sparos.uniquone.msauserservice.users.dto.auth.AuthOtpCodeDto;
+import com.sparos.uniquone.msauserservice.users.dto.auth.request.AuthSmsRequestDto;
 import com.sparos.uniquone.msauserservice.users.dto.signup.ExistNicknameResponseDto;
 import com.sparos.uniquone.msauserservice.users.service.auth.AuthService;
 import com.sparos.uniquone.msauserservice.users.service.user.UserService;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AuthController {
     private final UserService userService;
 
@@ -29,11 +31,18 @@ public class AuthController {
     }
 
     @PostMapping("/ePush")
-    public void sendOtpCodeToEmail(@RequestBody @Validated AuthEmailDto authEmailDto, HttpServletResponse response){
+    public void sendOtpCodeByEmail(@RequestBody @Validated AuthEmailDto authEmailDto, HttpServletResponse response){
 
-        authService.sendOtpCodeToEmail(authEmailDto.getEmail());
+        authService.sendOtpCodeByEmail(authEmailDto.getEmail());
 
         response.setStatus(HttpServletResponse.SC_OK);
+    }
+
+    @PostMapping("/pPush")
+    public void sendOtpCodeBySms(@RequestBody @Validated AuthSmsRequestDto authSmsRequestDto, HttpServletResponse response){
+
+        authService.sendOtpCodeBySms(authSmsRequestDto.getEmail(), authSmsRequestDto.getPhoneNum());
+
     }
 
     @PostMapping("/check")

@@ -32,8 +32,6 @@ public class UserController {
     // 채팅 - 유저 정보 요청 API
     @GetMapping("/chat/userInfo/{userId}")
     public UserChatResponseDto chatUserInfo(@PathVariable("userId") Long userId) {
-        System.err.println("냐냐냐냐");
-        System.err.println("userId" + userId);
 
         Users user = userRepository.findById(userId).get();
 
