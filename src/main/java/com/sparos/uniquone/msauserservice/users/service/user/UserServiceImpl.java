@@ -7,12 +7,13 @@ import com.sparos.uniquone.msauserservice.users.domain.Users;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserJwtDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserPwDto;
 import com.sparos.uniquone.msauserservice.users.repository.UserRepository;
-import com.sparos.uniquone.msauserservice.users.security.jwt.JwtProvider;
-import com.sparos.uniquone.msauserservice.users.security.users.CustomUserDetails;
-import com.sparos.uniquone.msauserservice.util.generate.GenerateRandomNick;
+import com.sparos.uniquone.msauserservice.utils.security.jwt.JwtProvider;
+import com.sparos.uniquone.msauserservice.utils.security.users.CustomUserDetails;
+import com.sparos.uniquone.msauserservice.utils.exception.ErrorCode;
+import com.sparos.uniquone.msauserservice.utils.exception.UniquOneServiceException;
+import com.sparos.uniquone.msauserservice.utils.generate.GenerateRandomNick;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bouncycastle.math.raw.Mod;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -49,6 +50,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(UserCreateDto userDto) {
+
+        userRepository.findByEmail(userDto.getEmail()).ifPresent(it ->{
+            throw new UniquOneServiceException(ErrorCode.DUPLICATED_USER_EMAIL, String.format("%s 는 중복 입니다.",userDto.getEmail()));
+        });
+
+       userRepository.findByNickname(userDto.getNickname()).ifPresent(it ->{
+           throw new UniquOneServiceException(ErrorCode.DUPLICATED_USER_NICKNAME, String.format("%s는 중복입니다.",userDto.getNickname()));
+       });
+
+//       userRepository.existsByNickname(userDto.getNickname())
 
         Users user = Users.builder()
                 .email(userDto.getEmail())

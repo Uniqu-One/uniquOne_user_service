@@ -1,7 +1,7 @@
 package com.sparos.uniquone.msauserservice.users.service.auth;
 
 import com.sparos.uniquone.msauserservice.oauth2confirm.service.Oauth2ConfirmService;
-import com.sparos.uniquone.msauserservice.util.otp.service.MailService;
+import com.sparos.uniquone.msauserservice.utils.otp.service.MailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
