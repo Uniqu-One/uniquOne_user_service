@@ -44,7 +44,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().anyRequest().permitAll()
                         .and()
                                 .addFilter(getAuthenticationFilter());
-        http.logout().logoutUrl("logout");
+        http.logout().logoutUrl("/logout");
 
 //        http.oauth2Login().loginPage("/token/expired")
         http.oauth2Login()
@@ -58,14 +58,6 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authenticationProvider);
     }
-
-//    @Override
-//    public void configure(org.springframework.security.config.annotation.web.builders.WebSecurity web) throws Exception {
-//        web.ignoring().antMatchers(
-//                "/swagger-ui/index.html",  "/configuration/ui",
-//                "/swagger-resources", "/configuration/security",
-//                "/swagger-ui.html", "/webjars/**","/swagger/**");
-//    }
 
     private AuthenticationFilter getAuthenticationFilter() throws Exception{
         AuthenticationFilter authenticationFilter = new AuthenticationFilter(authenticationManager(),userService,jwtProvider,objectMapper);

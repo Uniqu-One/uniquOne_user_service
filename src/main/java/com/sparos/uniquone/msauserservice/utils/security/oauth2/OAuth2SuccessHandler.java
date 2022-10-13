@@ -12,8 +12,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.web.DefaultRedirectStrategy;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +36,8 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     private final GenerateRandomNick generateRandomNick;
 
+//    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
@@ -46,6 +51,13 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         JwtToken jwtToken = jwtProvider.generateToken(users.getId(),users.getEmail(), users.getRole().value());
 
         writeTokenResponse(response,jwtToken);
+
+//        나중에 환경 변수 처리.
+//        String url = UriComponentsBuilder.fromUriString("http://10.10.10.138:3000/dk").build().toUriString();
+//        String url = UriComponentsBuilder.fromUriString("http://localhost:8000/login").build().toUriString();
+
+//        redirectStrategy.sendRedirect(request,response,url);
+
     }
 
     private void writeTokenResponse(HttpServletResponse response, JwtToken jwtToken) throws IOException{
@@ -54,6 +66,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         response.addHeader("token", jwtToken.getToken());
         response.addHeader("refresh", jwtToken.getRefreshToken());
         response.setContentType("application/json;charset=UTF-8");
+//        String url = UriComponentsBuilder.fromUriString("http://localhost:8000/login").build().toUriString();
+        String url = UriComponentsBuilder.fromUriString("http://10.10.10.138:3000/dk").build().toUriString();
+        response.sendRedirect(url);
 
         PrintWriter writer = response.getWriter();
         writer.println(objectMapper.writeValueAsString(jwtToken));
@@ -80,4 +95,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                 .nickname(generateRandomNick.generate())
                 .build();
     }
+
+//    private String makeRedirectUrl(String token) {
+//        return UriComponentsBuilder.fromUriString("http://10.10.10.146:3000/" + token)
+//                .build().toUriString();
+//    }
 }
