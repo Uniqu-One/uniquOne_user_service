@@ -1,10 +1,7 @@
 package com.sparos.uniquone.msauserservice.users.controller;
 
 import com.sparos.uniquone.msauserservice.users.domain.Users;
-import com.sparos.uniquone.msauserservice.users.dto.user.UserChatResponseDto;
-import com.sparos.uniquone.msauserservice.users.dto.user.UserDto;
-import com.sparos.uniquone.msauserservice.users.dto.user.UserPwDto;
-import com.sparos.uniquone.msauserservice.users.dto.user.UserUpdateNickDto;
+import com.sparos.uniquone.msauserservice.users.dto.user.*;
 import com.sparos.uniquone.msauserservice.users.repository.UserRepository;
 import com.sparos.uniquone.msauserservice.users.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +36,13 @@ public class UserController {
                 .userId(user.getId())
                 .nickname(user.getNickname())
                 .build();
+    }
+
+    // 후기 - 유저 정보 요청 API
+    @GetMapping("/review/userInfo/{userId}")
+    public String reviewUserInfo(@PathVariable("userId") Long userId) {
+        Users user = userRepository.findById(userId).get();
+        return user.getNickname();
 
     }
     //회원 정보 조회
