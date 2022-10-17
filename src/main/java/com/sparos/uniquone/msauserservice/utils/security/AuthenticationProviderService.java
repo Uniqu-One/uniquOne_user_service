@@ -26,7 +26,8 @@ public class AuthenticationProviderService implements AuthenticationProvider {
         CustomUserDetails userDetails = (CustomUserDetails )userService.loadUserByUsername(email);
 
         if(!passwordEncoder.matches(password, userDetails.getPassword()))
-            throw new BadCredentialsException(userDetails.getUsername() + "비밀번호 불 일치");
+//            throw new BadCredentialsException(userDetails.getUsername() + " 비밀번호 불 일치 ");
+            throw new BadCredentialsException("아이디 또는 패스워드가 틀립니다.");
 
 
         return new UsernamePasswordAuthenticationToken(email, password,userDetails.getAuthorities());

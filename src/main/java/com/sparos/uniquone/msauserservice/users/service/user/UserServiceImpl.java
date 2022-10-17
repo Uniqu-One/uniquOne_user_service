@@ -28,8 +28,6 @@ import java.util.function.Supplier;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final JwtProvider jwtProvider;
-
     private final UserRepository userRepository;
 
     private final BCryptPasswordEncoder passwordEncoder;
@@ -38,14 +36,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//    public CustomUserDetails loadUserByUsername(String username) {
         Supplier<UsernameNotFoundException> s =
                 () -> new UsernameNotFoundException(
-                        "인증 문제! 해당 Email 없음."
+                        "아이디 또는 패스워드가 틀립니다."
                 );
-
-        Users users = userRepository.findByEmail(username)
-                .orElseThrow(s);
-        return new CustomUserDetails(users);
+        return userRepository.findByEmail(username).map(CustomUserDetails::new).orElseThrow(s);
     }
 
     @Override
@@ -74,13 +70,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto findByEmail(String email) {
         Optional<Users> users = userRepository.findByEmail(email);
-//        jwtProvider.getEmailId()
         return new ModelMapper().map(users, UserDto.class);
     }
 
     @Override
     public UserDto findUserByToken(HttpServletRequest request) {
-        String email = jwtProvider.getEmailId(request);
+        String email = JwtProvider.getUserEmail(request);
 
         Users user = userRepository.findByEmail(email).get();
 
@@ -89,7 +84,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUserNicNameByToken(String nickName, HttpServletRequest request) {
-        String email = jwtProvider.getEmailId(request);
+        String email = JwtProvider.getUserEmail(request);
 
         Users user = userRepository.findByEmail(email).get();
 
@@ -102,7 +97,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean updateUserPwByToken(UserPwDto userPwDto, HttpServletRequest request) {
-        String email = jwtProvider.getEmailId(request);
+        String email = JwtProvider.getUserEmail(request);
 
         Users user = userRepository.findByEmail(email).get();
 

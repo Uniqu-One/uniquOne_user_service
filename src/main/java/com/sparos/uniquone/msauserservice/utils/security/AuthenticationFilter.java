@@ -7,6 +7,7 @@ import com.sparos.uniquone.msauserservice.utils.security.jwt.JwtProvider;
 import com.sparos.uniquone.msauserservice.utils.security.jwt.JwtToken;
 import com.sparos.uniquone.msauserservice.users.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,20 +20,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 //@RequiredArgsConstructor
 @Slf4j
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final UserService userService;
-    private final JwtProvider jwtProvider;
     private final ObjectMapper objectMapper;
 
     public AuthenticationFilter(AuthenticationManager authenticationManager, UserService userService
-            , JwtProvider jwtProvider, ObjectMapper objectMapper) {
+            , ObjectMapper objectMapper) {
         super.setAuthenticationManager(authenticationManager);
         this.userService = userService;
-        this.jwtProvider = jwtProvider;
         this.objectMapper = objectMapper;
     }
 
@@ -53,14 +54,14 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 //            throw new RuntimeException(e);
 //        }
 
-        try{
+        try {
             UserLoginDto creds = new ObjectMapper().readValue(request.getInputStream(), UserLoginDto.class);
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(creds.getEmail(), creds.getPassword());
 
-            setDetails(request,auth);
+            setDetails(request, auth);
 
             return this.getAuthenticationManager().authenticate(auth);
-        }catch(IOException e){
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -74,24 +75,32 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 //        log.info("userdto.id {}: ", userDto.getId());
 
-        JwtToken jwtToken = jwtProvider.generateToken(userDto.getId() ,email, userDto.getRole());
+        JwtToken jwtToken = JwtProvider.generateToken(userDto.getId(), email, userDto.getNickname(), userDto.getRole());
         response.addHeader("email", email);
-        writeTokenResponse(response,jwtToken);
+        writeTokenResponse(response, jwtToken);
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        super.unsuccessfulAuthentication(request, response, failed);
+
+//        log.error("unsuccessfulAuthentication failed.getLocalizedMessage(): {}", failed.getLocalizedMessage());
+
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType("application/json;charset=UTF-8");
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("code", HttpStatus.UNAUTHORIZED.value());
+        body.put("error", failed.getMessage());
+
+        new ObjectMapper().writeValue(response.getOutputStream(), body);
     }
 
-    private void writeTokenResponse(HttpServletResponse response, JwtToken jwtToken) throws IOException{
+    private void writeTokenResponse(HttpServletResponse response, JwtToken jwtToken) throws IOException {
         response.setContentType("text/html;charset=UTF-8");
 
 
         response.addHeader("token", jwtToken.getToken());
         response.addHeader("refresh", jwtToken.getRefreshToken());
-        response.addHeader("Access-Control-Expose-Headers","token, refresh");
+        response.addHeader("Access-Control-Expose-Headers", "token, refresh");
 
         response.setContentType("application/json;charset=UTF-8");
 

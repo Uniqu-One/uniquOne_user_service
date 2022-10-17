@@ -10,6 +10,7 @@ import com.sparos.uniquone.msauserservice.users.typeEnum.UserRole;
 import com.sparos.uniquone.msauserservice.utils.generate.GenerateRandomNick;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.DefaultRedirectStrategy;
@@ -28,13 +29,13 @@ import java.io.PrintWriter;
 @Component
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
-
-    private final JwtProvider jwtProvider;
     private final UserRepository usersRepository;
 
     private final ObjectMapper objectMapper;
 
     private final GenerateRandomNick generateRandomNick;
+    @Value("${token.secret}")
+    private String key;
 
 //    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
@@ -47,10 +48,10 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         Users users = saveOrUpdate(userDto);
 
 //        log.info("user Id : {}", users.getId());
+        //여기 잘 나오는지 한번 찍
+        JwtToken jwtToken = JwtProvider.generateToken(users.getId(), users.getEmail(),users.getNickname() ,users.getRole().value());
 
-        JwtToken jwtToken = jwtProvider.generateToken(users.getId(),users.getEmail(), users.getRole().value());
-
-        writeTokenResponse(response,jwtToken);
+        writeTokenResponse(response, jwtToken);
 
 //        나중에 환경 변수 처리.
 //        String url = UriComponentsBuilder.fromUriString("http://10.10.10.138:3000/dk").build().toUriString();
@@ -60,14 +61,14 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     }
 
-    private void writeTokenResponse(HttpServletResponse response, JwtToken jwtToken) throws IOException{
+    private void writeTokenResponse(HttpServletResponse response, JwtToken jwtToken) throws IOException {
         response.setContentType("text/html;charset=UTF-8");
 
         response.addHeader("token", jwtToken.getToken());
         response.addHeader("refresh", jwtToken.getRefreshToken());
         response.setContentType("application/json;charset=UTF-8");
-//        String url = UriComponentsBuilder.fromUriString("http://localhost:8000/login").build().toUriString();
-        String url = UriComponentsBuilder.fromUriString("http://10.10.10.138:3000/dk").build().toUriString();
+        String url = UriComponentsBuilder.fromUriString("http://localhost:8000/login").build().toUriString();
+//        String url = UriComponentsBuilder.fromUriString("http://10.10.10.138:3000/dk").build().toUriString();
         response.sendRedirect(url);
 
         PrintWriter writer = response.getWriter();
@@ -75,7 +76,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         writer.flush();
     }
 
-    private Users saveOrUpdate(UserDto userDto){
+    private Users saveOrUpdate(UserDto userDto) {
         Users users = usersRepository.findByEmail(userDto.getEmail())
 //                .map(entity -> entity.setNickname(userDto.getNickname()))
                 .orElse(Users.builder()
@@ -87,11 +88,11 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         return usersRepository.save(users);
     }
 
-    private UserDto oauthToDto(OAuth2User oAuth2User){
+    private UserDto oauthToDto(OAuth2User oAuth2User) {
         var attributes = oAuth2User.getAttributes();
 
         return UserDto.builder()
-                .email((String)attributes.get("email"))
+                .email((String) attributes.get("email"))
                 .nickname(generateRandomNick.generate())
                 .build();
     }
