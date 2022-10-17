@@ -1,5 +1,6 @@
 package com.sparos.uniquone.msauserservice.utils.security.jwt.controller;
 
+import com.sparos.uniquone.msauserservice.users.dto.user.UserDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserJwtDto;
 import com.sparos.uniquone.msauserservice.utils.security.jwt.JwtProvider;
 import com.sparos.uniquone.msauserservice.utils.security.jwt.JwtToken;
@@ -14,9 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequiredArgsConstructor
 public class JwtController {
-
-    private final JwtProvider jwtProvider;
-
     private final UserService userService;
 
     @GetMapping("/token/expired")
@@ -30,12 +28,12 @@ public class JwtController {
 //        response.addHeader("refresh", jwtToken.getRefreshToken());
         String token = request.getHeader("reflash");
 
-        if(token != null && jwtProvider.verifyToken(token)){
-            String email = jwtProvider.getEmailId(token);
+        if(token != null && JwtProvider.verifyToken(token)){
+            String email = JwtProvider.getUserNickName(token);
             UserJwtDto userDto = userService.findByEmailForJwt(email);
             //ㅇㅖ외 처리.
 //            userService.
-            JwtToken newToken = jwtProvider.generateToken(userDto.getId(),userDto.getEmail(), userDto.getRole());
+            JwtToken newToken = JwtProvider.generateToken(userDto.getId(),userDto.getEmail(), userDto.getNickname(),userDto.getRole());
 
             response.addHeader("token", newToken.getToken());
             response.addHeader("refresh", newToken.getRefreshToken());
