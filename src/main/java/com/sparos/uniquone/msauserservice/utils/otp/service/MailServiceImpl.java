@@ -25,7 +25,7 @@ public class MailServiceImpl implements MailService{
         simpleMailMessage.setTo(toSendUserEmail);
 
         //메일 제목
-        simpleMailMessage.setSubject("유니크온 서비스 인증 코드");
+        simpleMailMessage.setSubject("유니크원 서비스 인증 코드");
 
         //메일 내용
         String otpCode = GenerateSmsOtpCode.generateCode();

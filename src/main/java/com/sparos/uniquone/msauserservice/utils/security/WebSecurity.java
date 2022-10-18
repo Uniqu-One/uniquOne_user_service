@@ -2,12 +2,13 @@ package com.sparos.uniquone.msauserservice.utils.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparos.uniquone.msauserservice.users.repository.UserRepository;
+import com.sparos.uniquone.msauserservice.users.service.user.UserService;
+import com.sparos.uniquone.msauserservice.utils.security.exception.CustomAuthenticationEntryPoint;
 import com.sparos.uniquone.msauserservice.utils.security.jwt.JwtAuthFilter;
-import com.sparos.uniquone.msauserservice.utils.security.jwt.JwtProvider;
 import com.sparos.uniquone.msauserservice.utils.security.oauth2.CustomOauth2UserService;
 import com.sparos.uniquone.msauserservice.utils.security.oauth2.OAuth2SuccessHandler;
-import com.sparos.uniquone.msauserservice.users.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -25,15 +26,13 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     private final CustomOauth2UserService oauth2UserService;
     private final OAuth2SuccessHandler successHandler;
-
-
-    private final JwtProvider jwtProvider;
     private final UserService userService;
     private final ObjectMapper objectMapper;
     private final UserRepository userRepository;
-
-
     private final AuthenticationProvider authenticationProvider;
+
+    @Value("${token.secret}")
+    private String key;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -42,8 +41,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests().anyRequest().permitAll()
-                        .and()
-                                .addFilter(getAuthenticationFilter());
+                .and()
+                .addFilter(getAuthenticationFilter());
         http.logout().logoutUrl("/logout");
 
 //        http.oauth2Login().loginPage("/token/expired")
@@ -51,7 +50,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .successHandler(successHandler)
                 .userInfoEndpoint().userService(oauth2UserService);
 
-        http.addFilterBefore(new JwtAuthFilter(jwtProvider,userRepository), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthFilter(key, userRepository), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling()
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+        ;
     }
 
     @Override
@@ -59,8 +61,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(authenticationProvider);
     }
 
-    private AuthenticationFilter getAuthenticationFilter() throws Exception{
-        AuthenticationFilter authenticationFilter = new AuthenticationFilter(authenticationManager(),userService,jwtProvider,objectMapper);
+    private AuthenticationFilter getAuthenticationFilter() throws Exception {
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter(authenticationManager(), userService, objectMapper);
 
         authenticationFilter.setFilterProcessesUrl("/login/oauth");
 

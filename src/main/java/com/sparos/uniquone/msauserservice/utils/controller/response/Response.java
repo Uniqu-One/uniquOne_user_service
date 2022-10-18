@@ -21,4 +21,17 @@ public class Response<T> {
     public static <T> Response<T> error(String errorCode){
         return new Response<>(errorCode, null);
     }
+
+    public String toStream() {
+        if (result == null) {
+            return "{" +
+                    "\"resultCode\":" + "\"" + resultCode + "\"," +
+                    "\"result\":" + null +
+                    "}";
+        }
+        return "{" +
+                "\"resultCode\":" + "\"" + resultCode + "\"," +
+                "\"result\":" + "\"" + result + "\"," +
+                "}";
+    }
 }
