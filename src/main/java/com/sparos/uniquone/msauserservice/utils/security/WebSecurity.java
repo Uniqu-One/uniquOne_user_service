@@ -2,11 +2,11 @@ package com.sparos.uniquone.msauserservice.utils.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparos.uniquone.msauserservice.users.repository.UserRepository;
+import com.sparos.uniquone.msauserservice.users.service.user.UserService;
+import com.sparos.uniquone.msauserservice.utils.security.exception.CustomAuthenticationEntryPoint;
 import com.sparos.uniquone.msauserservice.utils.security.jwt.JwtAuthFilter;
-import com.sparos.uniquone.msauserservice.utils.security.jwt.JwtProvider;
 import com.sparos.uniquone.msauserservice.utils.security.oauth2.CustomOauth2UserService;
 import com.sparos.uniquone.msauserservice.utils.security.oauth2.OAuth2SuccessHandler;
-import com.sparos.uniquone.msauserservice.users.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -50,7 +50,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .successHandler(successHandler)
                 .userInfoEndpoint().userService(oauth2UserService);
 
-        http.addFilterBefore(new JwtAuthFilter(key, userRepository), UsernamePasswordAuthenticationFilter.class);
+
+        http.addFilterBefore(new JwtAuthFilter(key, userRepository), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling()
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+        ;
+
     }
 
     @Override
