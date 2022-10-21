@@ -43,6 +43,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().anyRequest().permitAll()
                 .and()
                 .addFilter(getAuthenticationFilter());
+//        http.authorizeRequests()
+//                .antMatchers("/**")
+//                .access("hasIpAddress('" + "172.18.0.8" + "')")
+//                .and()
+//                .addFilter(getAuthenticationFilter());
+
         http.logout().logoutUrl("/logout");
 
 //        http.oauth2Login().loginPage("/token/expired")
