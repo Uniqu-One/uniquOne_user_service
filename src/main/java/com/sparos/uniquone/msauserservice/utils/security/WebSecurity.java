@@ -37,12 +37,18 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic().disable();
-        http.cors().and().csrf().disable();
+        http.cors().disable().csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests().anyRequest().permitAll()
                 .and()
                 .addFilter(getAuthenticationFilter());
+//        http.authorizeRequests()
+//                .antMatchers("/**")
+//                .access("hasIpAddress('" + "172.18.0.8" + "')")
+//                .and()
+//                .addFilter(getAuthenticationFilter());
+
         http.logout().logoutUrl("/logout");
 
 //        http.oauth2Login().loginPage("/token/expired")
