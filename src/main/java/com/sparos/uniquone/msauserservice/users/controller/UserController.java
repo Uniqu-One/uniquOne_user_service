@@ -38,8 +38,8 @@ public class UserController {
     }
 
     // 후기 - 유저 정보 요청 API
-    @GetMapping("/review/userInfo/{userId}")
-    public String reviewUserInfo(@PathVariable("userId") Long userId) {
+    @GetMapping("/get/nickName/{userId}")
+    public String getUserNickName(@PathVariable("userId") Long userId) {
         Users user = userRepository.findById(userId).get();
         return user.getNickname();
 
