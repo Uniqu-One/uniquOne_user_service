@@ -39,9 +39,11 @@ public class UserController {
 
     // 후기 - 유저 정보 요청 API
     @GetMapping("/test/userInfo/{userId}")
-    public UserPostResponseDto getUserNickName(@PathVariable("userId") Long userId, HttpServletRequest request) {
+    public UserPostResponseDto getUserNickName(@PathVariable("userId") Long userId) {
         Users user = userRepository.findById(userId).get();
-        return UserPostResponseDto.builder().nickname(user.getNickname()).build();
+        return UserPostResponseDto.builder()
+                .nickname(user.getNickname())
+                .build();
 //        return user.getNickname();
     }
 
