@@ -42,8 +42,8 @@ public class UserController {
     public String getUserNickName(@PathVariable("userId") Long userId) {
         Users user = userRepository.findById(userId).get();
         return user.getNickname();
-
     }
+
     //회원 정보 조회
     @GetMapping
     public ResponseEntity<UserDto> findUserByAuthToken(HttpServletRequest request){
