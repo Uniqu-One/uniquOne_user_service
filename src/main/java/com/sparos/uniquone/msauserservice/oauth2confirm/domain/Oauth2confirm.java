@@ -3,10 +3,7 @@ package com.sparos.uniquone.msauserservice.oauth2confirm.domain;
 import com.sparos.uniquone.msauserservice.utils.AuditingFields.BaseTimeEntity;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Builder
@@ -15,7 +12,7 @@ import javax.persistence.Id;
 @Getter
 public class Oauth2confirm extends BaseTimeEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false ,length = 45)

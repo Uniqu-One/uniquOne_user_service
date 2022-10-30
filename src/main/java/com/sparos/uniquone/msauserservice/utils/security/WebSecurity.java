@@ -58,8 +58,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 
         http.addFilterBefore(new JwtAuthFilter(key, userRepository), UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling()
-                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+        //이거 살리면
+//                .exceptionHandling()
+//                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
         ;
 
     }
@@ -68,7 +69,6 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authenticationProvider);
     }
-
     private AuthenticationFilter getAuthenticationFilter() throws Exception {
         AuthenticationFilter authenticationFilter = new AuthenticationFilter(authenticationManager(), userService, objectMapper);
 

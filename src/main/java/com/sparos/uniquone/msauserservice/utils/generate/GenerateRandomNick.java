@@ -34,7 +34,7 @@ public class GenerateRandomNick {
 
         int checkCnt = 0;
         while(userRepository.existsByNickname(nickname)){
-            System.out.println(nickname);
+
             nickname = shuffle();
             if(checkCnt >= 5){
                 nickname = UUID.randomUUID().toString();

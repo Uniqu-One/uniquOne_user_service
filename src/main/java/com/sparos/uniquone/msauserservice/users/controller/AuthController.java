@@ -7,16 +7,19 @@ import com.sparos.uniquone.msauserservice.users.dto.signup.ExistNicknameResponse
 import com.sparos.uniquone.msauserservice.users.service.auth.AuthService;
 import com.sparos.uniquone.msauserservice.users.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
     private final UserService userService;
 
