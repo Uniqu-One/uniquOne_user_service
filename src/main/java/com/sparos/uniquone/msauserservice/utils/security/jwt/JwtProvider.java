@@ -106,7 +106,7 @@ public class JwtProvider {
                         .compact(),
                 Jwts.builder()
                         .setClaims(claims)
-                        .setIssuedAt(new Date())
+                        .setIssuedAt(new Date(System.currentTimeMillis()))
                         .setExpiration(new Date(System.currentTimeMillis() + re_expiredTimeMs))
                         .signWith(getKey(key), SignatureAlgorithm.HS256)
                         .compact()

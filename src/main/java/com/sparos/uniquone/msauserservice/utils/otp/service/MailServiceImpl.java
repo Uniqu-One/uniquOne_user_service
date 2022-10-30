@@ -1,5 +1,6 @@
 package com.sparos.uniquone.msauserservice.utils.otp.service;
 
+import com.sparos.uniquone.msauserservice.redisconfirm.service.RedisUtil;
 import com.sparos.uniquone.msauserservice.utils.generate.GenerateSmsOtpCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
@@ -12,6 +13,8 @@ public class MailServiceImpl implements MailService{
 
     private final JavaMailSender javaMailSender;
 
+
+
     @Override
     public String sendOtpMail(String toSendUserEmail) {
         //대량으로 보낼시
@@ -20,6 +23,10 @@ public class MailServiceImpl implements MailService{
         //유니콘 서비스의 수신 대상은 무조건  1명
         //단순 텍스트 구성 메일 메시지 생성 할때 이용 -> 나중에 유니콘 페이지 만들수 있으면만들기.
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+//        MimeMessageHelper messageHelper = new MimeMessageHelper()
+
+        //발신자 설정
+//        simpleMailMessage.setFrom("melodydk89@gmail.com","유니크원 관리자");
 
         //수신자 설정
         simpleMailMessage.setTo(toSendUserEmail);
@@ -31,6 +38,9 @@ public class MailServiceImpl implements MailService{
         String otpCode = GenerateSmsOtpCode.generateCode();
 
         simpleMailMessage.setText("인증 코드 : " + otpCode);
+
+
+
         //메일 발송
         javaMailSender.send(simpleMailMessage);
         //메일 otp 저장 or update;
