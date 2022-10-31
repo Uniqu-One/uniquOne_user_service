@@ -1,5 +1,8 @@
 package com.sparos.uniquone.msauserservice.users.service.user;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparos.uniquone.msauserservice.redisconfirm.service.RedisUtil;
+import com.sparos.uniquone.msauserservice.users.dto.auth.request.AuthTokenRequestDto;
 import com.sparos.uniquone.msauserservice.users.dto.signup.RandomNickDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserCreateDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserDto;
@@ -8,6 +11,7 @@ import com.sparos.uniquone.msauserservice.users.dto.user.UserJwtDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserPwDto;
 import com.sparos.uniquone.msauserservice.users.repository.UserRepository;
 import com.sparos.uniquone.msauserservice.utils.security.jwt.JwtProvider;
+import com.sparos.uniquone.msauserservice.utils.security.jwt.JwtToken;
 import com.sparos.uniquone.msauserservice.utils.security.users.CustomUserDetails;
 import com.sparos.uniquone.msauserservice.utils.exception.ErrorCode;
 import com.sparos.uniquone.msauserservice.utils.exception.UniquOneServiceException;
@@ -18,8 +22,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -33,6 +42,10 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     private final GenerateRandomNick generateRandomNick;
+
+    private final ObjectMapper objectMapper;
+
+    private final RedisUtil redisUtil;
 
     @Override
     public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -137,6 +150,48 @@ public class UserServiceImpl implements UserService {
     @Override
     public RandomNickDto generateNickName() {
         return new RandomNickDto(generateRandomNick.generate());
+    }
+
+    @Override
+    public String reIssueToken(AuthTokenRequestDto authTokenRequestDto, HttpServletResponse response) throws IOException, ServletException {
+
+        String refreshToken = redisUtil.getDate(authTokenRequestDto.getEmail());
+
+        if(StringUtils.hasText(refreshToken) && authTokenRequestDto.getRefreshToken().equals(refreshToken)){
+            Users users = userRepository.findByEmail(authTokenRequestDto.getEmail()).orElseThrow(() -> {
+                throw new UniquOneServiceException(ErrorCode.USER_NOT_FOUND);
+            });
+
+            JwtToken jwtToken = JwtProvider.generateToken(users.getId(), users.getEmail(), users.getEmail(), users.getRole().value());
+
+            response.addHeader("email", users.getEmail());
+            response.setContentType("text/html;charset=UTF-8");
+            response.addHeader("token", jwtToken.getToken());
+            response.addHeader("refresh", jwtToken.getRefreshToken());
+//            writeTokenResponse(response, jwtToken);
+
+            //refresh token 저장. 60 * 60 * 24 * 15L = 15일 초로 계산.
+            redisUtil.setDataExpire(users.getEmail(), jwtToken.getRefreshToken(), 60 * 60 * 24 * 15L);
+
+            return "Success reIssue Token";
+        }
+
+        return "Fail reIssue Token";
+    }
+
+    private void writeTokenResponse(HttpServletResponse response, JwtToken jwtToken) throws IOException {
+        response.setContentType("text/html;charset=UTF-8");
+
+
+        response.addHeader("token", jwtToken.getToken());
+        response.addHeader("refresh", jwtToken.getRefreshToken());
+        response.addHeader("Access-Control-Expose-Headers", "token, refresh");
+
+        response.setContentType("application/json;charset=UTF-8");
+
+        PrintWriter writer = response.getWriter();
+        writer.println(objectMapper.writeValueAsString(jwtToken));
+        writer.flush();
     }
 
 
