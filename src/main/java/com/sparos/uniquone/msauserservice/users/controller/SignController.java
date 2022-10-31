@@ -35,4 +35,6 @@ public class SignController {
         RandomNickDto randomNickDto = userService.generateNickName();
         return ResponseEntity.status(HttpStatus.OK).body(randomNickDto);
     }
+
+
 }

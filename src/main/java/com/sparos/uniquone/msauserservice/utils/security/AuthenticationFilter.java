@@ -1,11 +1,12 @@
 package com.sparos.uniquone.msauserservice.utils.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparos.uniquone.msauserservice.redisconfirm.service.RedisUtil;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserJwtDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserLoginDto;
+import com.sparos.uniquone.msauserservice.users.service.user.UserService;
 import com.sparos.uniquone.msauserservice.utils.security.jwt.JwtProvider;
 import com.sparos.uniquone.msauserservice.utils.security.jwt.JwtToken;
-import com.sparos.uniquone.msauserservice.users.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,16 +26,19 @@ import java.util.Map;
 
 //@RequiredArgsConstructor
 @Slf4j
+//@RequiredArgsConstructor
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final UserService userService;
     private final ObjectMapper objectMapper;
+    private final RedisUtil redisUtil;
 
     public AuthenticationFilter(AuthenticationManager authenticationManager, UserService userService
-            , ObjectMapper objectMapper) {
+            , ObjectMapper objectMapper, RedisUtil redisUtil) {
         super.setAuthenticationManager(authenticationManager);
         this.userService = userService;
         this.objectMapper = objectMapper;
+        this.redisUtil = redisUtil;
     }
 
 
@@ -76,8 +80,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 //        log.info("userdto.id {}: ", userDto.getId());
 
         JwtToken jwtToken = JwtProvider.generateToken(userDto.getId(), email, userDto.getNickname(), userDto.getRole());
+
         response.addHeader("email", email);
         writeTokenResponse(response, jwtToken);
+        //refresh token 저장. 60 * 60 * 24 * 15L = 15일 초로 계산.
+        redisUtil.setDataExpire(email, jwtToken.getRefreshToken(), 60 * 60 * 24 * 15L);
     }
 
     @Override

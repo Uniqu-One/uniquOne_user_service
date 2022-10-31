@@ -1,5 +1,6 @@
 package com.sparos.uniquone.msauserservice.users.service.user;
 
+import com.sparos.uniquone.msauserservice.users.dto.auth.request.AuthTokenRequestDto;
 import com.sparos.uniquone.msauserservice.users.dto.signup.RandomNickDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserCreateDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserDto;
@@ -7,7 +8,10 @@ import com.sparos.uniquone.msauserservice.users.dto.user.UserJwtDto;
 import com.sparos.uniquone.msauserservice.users.dto.user.UserPwDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public interface UserService extends UserDetailsService {
 
@@ -27,4 +31,5 @@ public interface UserService extends UserDetailsService {
     boolean existByEmail(String email);
 
     RandomNickDto generateNickName();
+    String reIssueToken(AuthTokenRequestDto authTokenRequestDto, HttpServletResponse response) throws IOException, ServletException;
 }
