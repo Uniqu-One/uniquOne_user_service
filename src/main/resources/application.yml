@@ -4,9 +4,8 @@ server:
 #  test check
 #    Failed to start bean 'documentationPluginsBootstrapper'; nested exception is java.lang.NullPointerException 에러 처리.
 # 부트 버전 2.6 이후로 swagger 쓰는 방식이 달라서 그렇다고함 ;
-
+  #Use this to befriend spring-boot-starter-actuator & springfox-boot-starter
 spring:
-      #Use this to befriend spring-boot-starter-actuator & springfox-boot-starter
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER

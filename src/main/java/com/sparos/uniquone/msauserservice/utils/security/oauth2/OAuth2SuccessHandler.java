@@ -16,7 +16,10 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletException;
@@ -28,7 +31,8 @@ import java.io.PrintWriter;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
+//public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
+public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final UserRepository usersRepository;
 
     private final ObjectMapper objectMapper;
@@ -37,7 +41,8 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     @Value("${token.secret}")
     private String key;
 
-//    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+    @Value("${oauth.front.redirectUrl")
+    private String frontRedirectUrl;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -50,8 +55,19 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 //        log.info("user Id : {}", users.getId());
         //여기 잘 나오는지 한번 찍
         JwtToken jwtToken = JwtProvider.generateToken(users.getId(), users.getEmail(),users.getNickname() ,users.getRole().value());
+//frontRedirectUrl 는 config서버 application.yml 에 존재하고 있음.
+        String targetUrl = UriComponentsBuilder.fromUriString(frontRedirectUrl)
+                .queryParam("token", jwtToken.getToken())
+                .queryParam("refresh",jwtToken.getRefreshToken())
+                .build().toString();
 
-        writeTokenResponse(response, jwtToken);
+//        writeTokenResponse(response, jwtToken);
+//        response.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
+//        response.setHeader("Location",url);
+
+        response.addHeader("token", jwtToken.getToken());
+//        response.sendRedirect("http://localhost:3000/2");
+        getRedirectStrategy().sendRedirect(request,response,targetUrl);
 
 //        나중에 환경 변수 처리.
 //        String url = UriComponentsBuilder.fromUriString("http://10.10.10.138:3000/dk").build().toUriString();
@@ -67,9 +83,20 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         response.addHeader("token", jwtToken.getToken());
         response.addHeader("refresh", jwtToken.getRefreshToken());
         response.setContentType("application/json;charset=UTF-8");
-        String url = UriComponentsBuilder.fromUriString("http://localhost:8000/login").build().toUriString();
+
+        String url = UriComponentsBuilder.fromUriString("http://localhost:3000/redirect/oauth").queryParam("token",jwtToken.getToken()).build().toUriString();
+//        String url = UriComponentsBuilder.fromUriString("http://10.10.10.27:8000/auth").queryParam("token",jwtToken.getToken()).build().toUriString();
+
+//        response.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
+//        response.setHeader("Location",url);
+//        response.sendRedirect();
+
+
+//        String url = UriComponentsBuilder.fromUriString("http://localhost:3000/redirect/oauth/"+jwtToken.getToken()).build().toUriString();
+//        String url = UriComponentsBuilder.fromUriString("http://localhost:8000/login").build().toUriString();
 //        String url = UriComponentsBuilder.fromUriString("http://10.10.10.138:3000/dk").build().toUriString();
-        response.sendRedirect(url);
+//        response.sendRedirect(url);
+//        response.set
 
         PrintWriter writer = response.getWriter();
         writer.println(objectMapper.writeValueAsString(jwtToken));

@@ -1,9 +1,9 @@
 package com.sparos.uniquone.msauserservice.utils.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparos.uniquone.msauserservice.redisconfirm.service.RedisUtil;
 import com.sparos.uniquone.msauserservice.users.repository.UserRepository;
 import com.sparos.uniquone.msauserservice.users.service.user.UserService;
-import com.sparos.uniquone.msauserservice.utils.security.exception.CustomAuthenticationEntryPoint;
 import com.sparos.uniquone.msauserservice.utils.security.jwt.JwtAuthFilter;
 import com.sparos.uniquone.msauserservice.utils.security.oauth2.CustomOauth2UserService;
 import com.sparos.uniquone.msauserservice.utils.security.oauth2.OAuth2SuccessHandler;
@@ -30,6 +30,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     private final ObjectMapper objectMapper;
     private final UserRepository userRepository;
     private final AuthenticationProvider authenticationProvider;
+
+    private final RedisUtil redisUtil;
 
     @Value("${token.secret}")
     private String key;
@@ -58,8 +60,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 
         http.addFilterBefore(new JwtAuthFilter(key, userRepository), UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling()
-                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+        //이거 살리면
+//                .exceptionHandling()
+//                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
         ;
 
     }
@@ -68,9 +71,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authenticationProvider);
     }
-
     private AuthenticationFilter getAuthenticationFilter() throws Exception {
-        AuthenticationFilter authenticationFilter = new AuthenticationFilter(authenticationManager(), userService, objectMapper);
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter(authenticationManager(), userService, objectMapper,redisUtil);
 
         authenticationFilter.setFilterProcessesUrl("/login/oauth");
 

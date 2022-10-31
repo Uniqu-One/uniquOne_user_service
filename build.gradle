@@ -87,6 +87,9 @@ dependencies {
 //	implementation 'io.springfox:springfox-boot-starter'
 //	implementation group: 'io.springfox', name: 'springfox-oas', version: '3.0.0'
 
+	//redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
 
 	testImplementation 'org.springframework.security:spring-security-test'
 }
