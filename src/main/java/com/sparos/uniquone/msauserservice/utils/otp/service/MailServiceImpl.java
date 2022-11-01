@@ -1,6 +1,5 @@
 package com.sparos.uniquone.msauserservice.utils.otp.service;
 
-import com.sparos.uniquone.msauserservice.redisconfirm.service.RedisUtil;
 import com.sparos.uniquone.msauserservice.utils.generate.GenerateSmsOtpCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
