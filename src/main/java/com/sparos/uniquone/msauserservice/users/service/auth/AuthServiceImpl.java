@@ -9,6 +9,7 @@ import com.sparos.uniquone.msauserservice.utils.otp.service.MailService;
 import com.sparos.uniquone.msauserservice.utils.otp.service.SmsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -30,6 +31,7 @@ public class AuthServiceImpl implements AuthService {
     private final RedisUtil redisUtil;
 
     @Override
+    @Async
     public void sendOtpCodeByEmail(String email) {
         //메일 보내기 반환값 OTP 코드
         String sendOtpCode = mailService.sendOtpMail(email);
