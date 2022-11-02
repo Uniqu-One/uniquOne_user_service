@@ -14,8 +14,8 @@ public class Oauth2Controller {
         return "카카오 로그인 인증완료, code : " + code;
     }
 
-//    @GetMapping("/naver")
-//    public String naverOauthRedirect(@RequestParam String code){
-//        return "네이버 로그인 인증완료, code : " + code;
-//    }
+    @GetMapping("/naver")
+    public String naverOauthRedirect(@RequestParam String code){
+        return "네이버 로그인 인증완료, code : " + code;
+    }
 }
