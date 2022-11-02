@@ -22,7 +22,7 @@ public class UserController {
 
     @GetMapping("/welcome")
     public String welcome(){
-        return "welcome user service";
+        return "welcome Unique-One user service";
     }
 
     // 채팅 - 유저 정보 요청 API
