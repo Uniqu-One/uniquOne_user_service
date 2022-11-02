@@ -41,7 +41,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Value("${token.secret}")
     private String key;
 
-    @Value("${oauth.front.redirectUrl")
+    @Value("${oauth.front.redirectUrl}")
     private String frontRedirectUrl;
 
     @Override
