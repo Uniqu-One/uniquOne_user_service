@@ -41,7 +41,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Value("${token.secret}")
     private String key;
 
-    @Value("${oauth.front.redirectUrl")
+    @Value("${oauth.front.redirectUrl}")
     private String frontRedirectUrl;
 
     @Override
@@ -90,6 +90,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 .queryParam("token", jwtToken.getToken())
                 .queryParam("refresh", jwtToken.getRefreshToken())
                 .build().toString();
+
+        log.info("targetUrl = {} ", targetUrl);
 //        String url = UriComponentsBuilder.fromUriString("http://localhost:3000/redirect/oauth").queryParam("token", jwtToken.getToken()).build().toUriString();
 //        String url = UriComponentsBuilder.fromUriString("http://10.10.10.27:8000/auth").queryParam("token",jwtToken.getToken()).build().toUriString();
 
