@@ -54,8 +54,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.logout().logoutUrl("/logout");
 
 //        http.oauth2Login().loginPage("/token/expired")
-        http.oauth2Login()
-                .successHandler(successHandler)
+        http.oauth2Login(ouath2 -> ouath2
+                .redirectionEndpoint(redirection ->
+                        redirection.baseUri("/login/oauth2/*")));
+        http.oauth2Login().successHandler(successHandler)
                 .userInfoEndpoint().userService(oauth2UserService);
 
 
@@ -71,8 +73,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authenticationProvider);
     }
+
     private AuthenticationFilter getAuthenticationFilter() throws Exception {
-        AuthenticationFilter authenticationFilter = new AuthenticationFilter(authenticationManager(), userService, objectMapper,redisUtil);
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter(authenticationManager(), userService, objectMapper, redisUtil);
 
         authenticationFilter.setFilterProcessesUrl("/login/oauth");
 
