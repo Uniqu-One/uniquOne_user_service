@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/login/oauth2")
+@RequestMapping("/login/oauth2")
 public class Oauth2Controller {
 
     @GetMapping("/kakao")
@@ -14,8 +14,8 @@ public class Oauth2Controller {
         return "카카오 로그인 인증완료, code : " + code;
     }
 
-    @GetMapping("/naver")
-    public String naverOauthRedirect(@RequestParam String code){
-        return "네이버 로그인 인증완료, code : " + code;
-    }
+//    @GetMapping("/naver")
+//    public String naverOauthRedirect(@RequestParam String code){
+//        return "네이버 로그인 인증완료, code : " + code;
+//    }
 }
