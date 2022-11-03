@@ -54,9 +54,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.logout().logoutUrl("/logout");
 
 //        http.oauth2Login().loginPage("/token/expired")
+
         http.oauth2Login(ouath2 -> ouath2
                 .redirectionEndpoint(redirection ->
                         redirection.baseUri("/login/oauth2/*")));
+
+
         http.oauth2Login().successHandler(successHandler)
                 .userInfoEndpoint().userService(oauth2UserService);
 

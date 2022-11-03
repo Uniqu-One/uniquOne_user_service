@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -39,6 +40,12 @@ public class AuthController {
         ExistNicknameResponseDto existNicknameResponseDto = new ExistNicknameResponseDto();
         existNicknameResponseDto.setExistNickName(userService.existByNickname(nickname));
         return ResponseEntity.status(HttpStatus.OK).body(existNicknameResponseDto);
+    }
+
+    @PostMapping("/pUpdate")
+    public void sendUpdateEmailList(@RequestBody @Validated AuthEmailDto authEmailDto, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        authService.sendUpdateMailLinkPage(authEmailDto.getEmail(), request, response);
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     @PostMapping("/ePush")

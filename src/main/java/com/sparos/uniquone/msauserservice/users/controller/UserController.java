@@ -7,6 +7,7 @@ import com.sparos.uniquone.msauserservice.users.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -68,6 +69,14 @@ public class UserController {
         }else{
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
+    }
+
+    @PatchMapping("/pUpdate")
+    public void updateUserNePasswordByAuthToken(@RequestBody @Validated UserNewPwDto userNewPwDto, HttpServletRequest request, HttpServletResponse response){
+
+        userService.updateUserNewPwByToken(userNewPwDto, request);
+
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
 
