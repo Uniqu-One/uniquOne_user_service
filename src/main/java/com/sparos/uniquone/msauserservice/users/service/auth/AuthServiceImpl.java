@@ -13,6 +13,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
@@ -76,5 +78,11 @@ public class AuthServiceImpl implements AuthService {
         }
 
         return false;
+    }
+
+    @Override
+    @Async
+    public String sendUpdateMailLinkPage(String email, HttpServletRequest request, HttpServletResponse response) throws Exception{
+        return mailService.sendUpdatePasswordMail(email, request, response);
     }
 }
