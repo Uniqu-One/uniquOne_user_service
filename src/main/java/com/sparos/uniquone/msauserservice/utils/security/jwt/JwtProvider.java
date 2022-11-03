@@ -1,11 +1,12 @@
 package com.sparos.uniquone.msauserservice.utils.security.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.sparos.uniquone.msauserservice.utils.exception.ErrorCode;
+import com.sparos.uniquone.msauserservice.utils.exception.UniquOneServiceException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -72,12 +73,26 @@ public class JwtProvider {
     }
 
     public static String getUserEmail(String token) {
-        return extractClaims(token).get("email", String.class);
+        try{
+            return extractClaims(token).get("email", String.class);
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            throw new UniquOneServiceException(ErrorCode.INVALID_TOKEN);
+        } catch (ExpiredJwtException e) {
+            throw new UniquOneServiceException(ErrorCode.Expired_TOKEN);
+        } catch (UnsupportedJwtException e) {
+            throw new UniquOneServiceException(ErrorCode.UNSUPPORTED_TOKEN);
+        } catch (IllegalArgumentException e) {
+            throw new UniquOneServiceException(ErrorCode.EMPTY_PAYLOAD_TOKEN);
+        }
     }
 
     public static String getUserEmail(HttpServletRequest request) {
         String token = request.getHeader(tokenNameOfRequestHeader);
-        return getUserEmail(token);
+        String reToken = token.replace("Bearer ", "");
+        if(token == null || token.isEmpty()){
+            throw  new UniquOneServiceException(ErrorCode.NOT_EXIST_TOKEN);
+        }
+        return getUserEmail(reToken);
     }
 
     public static String getUserRole(String token) {
@@ -96,6 +111,26 @@ public class JwtProvider {
         claims.put("nickName", nickName);
         claims.put("email", email);
         claims.put("role", role);
+
+        return new JwtToken(
+                Jwts.builder()
+                        .setClaims(claims)
+                        .setIssuedAt(new Date(System.currentTimeMillis()))
+                        .setExpiration(new Date(System.currentTimeMillis() + expiredTimeMs))
+                        .signWith(getKey(key), SignatureAlgorithm.HS256)
+                        .compact(),
+                Jwts.builder()
+                        .setClaims(claims)
+                        .setIssuedAt(new Date(System.currentTimeMillis()))
+                        .setExpiration(new Date(System.currentTimeMillis() + re_expiredTimeMs))
+                        .signWith(getKey(key), SignatureAlgorithm.HS256)
+                        .compact()
+        );
+    }
+    public static JwtToken generateToken(String email) {
+        //닉네임을 여기서 꺼내쓸일이 있을까.
+        Claims claims = Jwts.claims().setSubject(email);
+        claims.put("email", email);
 
         return new JwtToken(
                 Jwts.builder()

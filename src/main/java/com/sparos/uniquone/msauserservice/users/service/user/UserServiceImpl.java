@@ -4,11 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparos.uniquone.msauserservice.redisconfirm.service.RedisUtil;
 import com.sparos.uniquone.msauserservice.users.dto.auth.request.AuthTokenRequestDto;
 import com.sparos.uniquone.msauserservice.users.dto.signup.RandomNickDto;
-import com.sparos.uniquone.msauserservice.users.dto.user.UserCreateDto;
-import com.sparos.uniquone.msauserservice.users.dto.user.UserDto;
+import com.sparos.uniquone.msauserservice.users.dto.user.*;
 import com.sparos.uniquone.msauserservice.users.domain.Users;
-import com.sparos.uniquone.msauserservice.users.dto.user.UserJwtDto;
-import com.sparos.uniquone.msauserservice.users.dto.user.UserPwDto;
 import com.sparos.uniquone.msauserservice.users.repository.UserRepository;
 import com.sparos.uniquone.msauserservice.utils.security.jwt.JwtProvider;
 import com.sparos.uniquone.msauserservice.utils.security.jwt.JwtToken;
@@ -121,6 +118,23 @@ public class UserServiceImpl implements UserService {
         }
         // 틀리면 false
         return false;
+    }
+
+    @Override
+    public boolean updateUserNewPwByToken(UserNewPwDto userNewPwDto, HttpServletRequest request) {
+        String email = JwtProvider.getUserEmail(request);
+
+        Users users = userRepository.findByEmail(email).orElseThrow(
+                () ->{
+                    throw new UniquOneServiceException(ErrorCode.USER_NOT_FOUND);
+                }
+        );
+
+        users.setPwd(passwordEncoder.encode(userNewPwDto.getPassword()));
+
+        userRepository.save(users);
+
+        return true;
     }
 
     //나중에 프론트에 권한 보여줘도 상관 없으면 그냥 통일.

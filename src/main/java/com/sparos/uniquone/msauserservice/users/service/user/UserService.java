@@ -2,10 +2,7 @@ package com.sparos.uniquone.msauserservice.users.service.user;
 
 import com.sparos.uniquone.msauserservice.users.dto.auth.request.AuthTokenRequestDto;
 import com.sparos.uniquone.msauserservice.users.dto.signup.RandomNickDto;
-import com.sparos.uniquone.msauserservice.users.dto.user.UserCreateDto;
-import com.sparos.uniquone.msauserservice.users.dto.user.UserDto;
-import com.sparos.uniquone.msauserservice.users.dto.user.UserJwtDto;
-import com.sparos.uniquone.msauserservice.users.dto.user.UserPwDto;
+import com.sparos.uniquone.msauserservice.users.dto.user.*;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import javax.servlet.ServletException;
@@ -23,6 +20,8 @@ public interface UserService extends UserDetailsService {
     UserDto updateUserNicNameByToken(String nickName, HttpServletRequest request);
 
     boolean updateUserPwByToken(UserPwDto userPwDto, HttpServletRequest request);
+
+    boolean updateUserNewPwByToken(UserNewPwDto userPwDto, HttpServletRequest request);
 
     UserJwtDto findByEmailForJwt(String email);
 
