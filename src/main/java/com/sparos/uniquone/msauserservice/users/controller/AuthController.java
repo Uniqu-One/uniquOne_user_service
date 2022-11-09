@@ -72,6 +72,4 @@ public class AuthController {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
-
-
 }
