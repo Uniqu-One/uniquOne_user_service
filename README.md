@@ -33,20 +33,16 @@
 <br>
 
 #### * 프론트 프로젝트는 아래의 링크를 확인해주세요!
-#### <u>[스파로스 아카데미 2조 F/E](https://github.com/curomame/UniquOne_FrontEnd)</u>
+#### <u>[![logoIcon2](https://user-images.githubusercontent.com/49605999/200447509-d7f1e198-1525-4dd0-9f2e-ccd00e75a37e.svg) 스파로스 유니콘 F/E](https://github.com/curomame/UniquOne_FrontEnd)</u>
 
 <br/>
 
 #
 
 ## 1.프로젝트 소개
-### 스파로스 아카데미의 첫 번째 프로젝트! 신세계 몰의 모바일 페이지 클론코딩을 진행하였습니다.
+### 중고 의류 ~ 입니다.
 
 ## 기술 스택
-
-<img src="https://img.shields.io/badge/아이콘이름-추천 색상?style=flat&logo=아이콘 이름&logoColor=white">
-
-<br>
 
 ### 언어
 <img src="https://img.shields.io/badge/JAVA-007396?style=flate&logo=java&logoColor=white">
@@ -66,7 +62,8 @@
 <img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=Docker&logoColor=white"/> <img src="https://img.shields.io/badge/Jenkins-D24939?style=flat&logo=Jenkins&logoColor=white"/>
 
 ### 퍼블릭 클라우드
-<img src="https://img.shields.io/badge/Amazon AWS-232F3E?style=flat-square&logo=Amazon%20AWS&logoColor=white"/>
+<img src="https://img.shields.io/badge/Amazon AWS-232F3E?style=flat&logo=Amazon AWS&logoColor=white"/>
+<img src="https://img.shields.io/badge/Amazon AWS Ec2-232F3E?style=flat&logo=Amazon AWS&logoColor=white"/> <img src="https://img.shields.io/badge/Amazon AWS RDS-232F3E?style=flat&logo=Amazon AWS&logoColor=white"/>
 
 ### 그외 라이브러리
 
