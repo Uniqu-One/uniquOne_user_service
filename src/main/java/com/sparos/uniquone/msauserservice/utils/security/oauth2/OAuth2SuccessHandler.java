@@ -92,6 +92,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 .queryParam("refresh", jwtToken.getRefreshToken())
                 .build().toString();
 
+        log.info("Check token = {}", jwtToken.getToken());
+
 //        log.info("targetUrl = {} ", targetUrl);
 //        String url = UriComponentsBuilder.fromUriString("http://localhost:3000/redirect/oauth").queryParam("token", jwtToken.getToken()).build().toUriString();
 //        String url = UriComponentsBuilder.fromUriString("http://10.10.10.27:8000/auth").queryParam("token",jwtToken.getToken()).build().toUriString();
