@@ -1,3 +1,4 @@
-FROM openjdk:11
-COPY build/libs/*.jar uniquone_user_img.jar
-ENTRYPOINT ["java", "-jar", "uniquone_user_img.jar"]
+FROM adoptopenjdk/openjdk11
+COPY build/libs/msa_user_service-0.0.1-SNAPSHOT.jar app/user-service.jar
+WORKDIR /app
+ENTRYPOINT ["java", "-jar", "user-service.jar"]
